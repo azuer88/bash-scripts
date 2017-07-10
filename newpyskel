@@ -1,0 +1,49 @@
+#/bin/bash 
+# Author: Blue Cuenca <blue.cuenca@gmail.com> 
+
+
+if [ -z "$1" ]; then
+   echo "Usage: $0 <filename>"
+   exit
+fi
+
+base_name=$(basename $1)
+file_ext="${base_name##*.}"
+file_name="${base_name%.*}"
+file_dir=$(dirname $1)
+
+# echo "file_name=$file_name"
+# echo "file_ext=$file_ext"
+# echo "file_dir=$file_dir"
+
+if [ "$file_ext" != "py" ]; then
+   file_ext="py"
+fi
+
+py_file_name="${file_dir}/${file_name}.$file_ext"
+
+if [ -f "$py_file_name" ]; then 
+   echo "'$py_file_name' exists, not overwriting"
+   exit
+fi
+
+echo -n "creating $py_file_name..."
+
+cat << EOF >$py_file_name
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# author: Blue Cuenca <blue.cuenca@gmail.com>
+
+
+def main():
+    pass
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(main())
+EOF
+
+chmod +x $py_file_name
+
+echo "DONE."
